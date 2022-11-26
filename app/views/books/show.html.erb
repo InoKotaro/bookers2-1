@@ -1,0 +1,71 @@
+
+<div class="container">
+
+      <% if @book.errors.any? %>
+        <%= @book.errors.count %>error prohibited this obj from being saved:
+            <ul>
+              <% @book.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
+      <% end %>
+
+  <div><%= flash[:notice] %></div>
+  <div class="row">
+    <div class="col-md-3">
+          <!-----------------------部分テンプレ------------------------------------>
+            <%= render 'list', user: @user, book: @book %>
+
+    </div>
+
+
+    <div class="col-md-8 offset-md-1">
+
+        <h1>Book detail</h1>
+        <table>
+            <thead>
+            	<th></th>
+                <th></th>
+                <th></th>
+                <th colspan="3"></th>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>
+                        <%= link_to user_path(@book_show.user) do %>
+                          <%= image_tag @book_show.get_image, class:"card-img-top"; %>
+                          <%=  @book_show.user.name %>
+                        <% end %>
+                    </td>S
+                    <td><%= link_to @book_show.title, book_path(@book_show), method: :get %></td>
+                    <td><%= @book_show.body %></td>
+                    <td>
+                        <% if @book_show.user == current_user %>
+                            <%= link_to "Edit", edit_book_path(@book_show), class: "btn btn-success" %>
+                            <%= link_to "Destroy", book_path, class: "btn btn-danger", method: :delete, "data-confirm" => "本当に消しますか？" %>
+                        <% end %>
+                    </td>
+                    <td>
+                        <div>
+                            <p>コメント件数：<%= @book_comment.comment.count %></p>
+                            <%  @book_comment.post_comment.each do |book_comment| %>
+                            <p><%= image_tag @book_comment.user.get_profile_image(100,100) %></p>
+                            <%= @book_comment.user.name %>
+                            <%= @book_comment.created_at.strftime('%Y/%m/%d') %><%= @book_comment.comment %>
+                            <% end %>
+                            </div>
+                            <div>
+                              <%= form_with model: [@book, @book_comment] do |f| %>
+                                <%= f.text_area :comment, rows: '5', placeholder: "コメントをここに" %>
+                                <%= f.submit "送信する" %>
+                              <% end %>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+  </div>
+</div>
