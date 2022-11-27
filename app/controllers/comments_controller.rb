@@ -1,21 +1,21 @@
 class CommentsController < ApplicationController
 
   def create
-     @book= Book.find(params[:book_id])#あとでidを渡すためにコメする本を識別
-     @comment= Comment.new(comment_params)#コメするためにコメモデル初期化
-     @comment.user_id = current_user.id#ログイン中ユーザーidをコメモデルのuser_idに置換え
-     @comment.book_id = book.id#4行目で取得した本idをコメモデルのbook_idに置換え
-     #これでコメモデルに必要なカラム置換え完了
-     @comment.save
-     redirect_to book_path(book)
+    book= Book.find(params[:book_id])#コメント
+    #comment= current_user.comment.new(commnet_params)省略ver.
+    comment= Comment.new(comment_params)#コメント
+    comment.user_id= current_user.id#ログイン中ユーザーに特定
+    comment.book_id= book.id#4行目で取得した本に特定
+    comment.save
+    redirect_to request.referer#元居たページに戻る
   end
 
   def destroy
-    Comment.find(params[:id]).destroy
-    redirect_to book_path(params[:book_id])
+    Comment.find_by(id: params[:id], book_id: params[:book_id]).destroy
+    redirect_to request.referer
   end
 
- private
+  private
 
   def comment_params
     params.require(:comment).permit(:comment)
