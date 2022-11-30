@@ -42,7 +42,8 @@
                           </td>
 
                           <td><%= link_to book.title, book_path(book), method: :get %>
-                          <td><span><%= book.body %></span></td>
+                            <span><%= book.body %></span>
+                          </td>
 
                           <td>
                              <% if book.favorited_by?(current_user) %>
