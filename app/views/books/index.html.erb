@@ -1,7 +1,6 @@
 <html>
-    <%= stylesheet_link_tag  'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-        <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
-    <script src="https://kit.fontawesome.com/96a43cceb0.js" crossorigin="anonymous"></script>
+
+
     <div class="container">
 
         <% if @book.errors.any? %>
@@ -21,6 +20,8 @@
           </div>
 
           <div class="col-md-8 offset-md-1">
+
+          <%= render 'searches/search' %>
 
             <h1>Books</h1>
             <table>

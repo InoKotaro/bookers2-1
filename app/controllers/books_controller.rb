@@ -63,8 +63,6 @@ class BooksController < ApplicationController
     end
   end
 
-  def comment_params
-    params.require(:comment).permit(:comment)
-  end
+
 
 end

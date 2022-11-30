@@ -32,6 +32,7 @@
                         <tr>
                             <td><%= image_tag user.get_profile_image(100,100) %></td>
                             <td><%= user.name %>
+                            <td><%= render "relationships/btn", user: user %></td><!--フォローテンプレ-->
                             <td><%= link_to "Show", user_path(user) %></td>
                         </tr>
                     <% end %>

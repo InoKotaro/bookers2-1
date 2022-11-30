@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-	 before_action :authenticate_user!, except: []
+	 before_action :authenticate_user!
 	 before_action :is_matching_login_user, only: [:edit, :update]
 
 	def index
@@ -16,8 +16,8 @@ class UsersController < ApplicationController
 
 	def edit
 		@user= User.find(params[:id])
-		#if @user!= current_user	（before_action :is_matching_login_user, only: [:edit, :update]で適用）
-		#	redirect_to user_path(current_user)
+		#if @user!= current_user（before_action :is_matching_login_user, only: [:edit, :update]で適用）
+		#redirect_to user_path(current_user)
 		#end
 	end
 

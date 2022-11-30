@@ -9,6 +9,13 @@ class User < ApplicationRecord
   has_many :favorites, dependent: :destroy
   has_many :comments, dependent: :destroy
 
+  #--------------------------↓フォロー機能--------------------------------
+ has_many :relationships, class_name: "Relationship", foreign_key: "follower_id", dependent: :destroy
+ has_many :followings, through: :relationships, source: :followed#一覧で使用
+ has_many :reverse_of_relationships, class_name: "Relationship", foreign_key: "followed_id", dependent: :destroy
+ has_many :followers, through: :reverse_of_relationships, source: :follower#一覧で使用
+  #------------------------------------------------------------------------
+
   validates :name, length: { minimum: 2, maximum: 20 }, presence: true, uniqueness: true
   validates :introduction, length: { maximum: 50 }
 
@@ -21,4 +28,33 @@ class User < ApplicationRecord
     profile_image.variant(resize_to_limit: [width, height]).processed
   end
 
+  #-----------↓フォロー機能-----リレーションシップコントで使うメソッド--------------------------------
+  def follow(user)#フォロー時
+   relationships.create(followed_id: user.id)#リレシテーブルfollowed_idカラムをuser.idに置換える処理
+  end                                        #followed_idはmigtateファイルで設定したカラム
+
+  def unfollow(user)#フォロー解除時
+   relationships.find_by(followed_id: user.id).destroy
+  end
+
+  def following?(user)#フォロー確認をおこなう
+   followings.include?(user)
+  end
+  #------------------------------------------------------------------------
+
+ #--------------------------↓検索機能（user）------------------------------
+  def self.looks(search, word)#searchテンプレでモデル指定したから
+     if search == "perfect_match"
+       @user = User.where("name LIKE?", "#{word}")#完全一致
+     elsif search == "forward_match"
+       @user = User.where("name LIKE?","#{word}%")#前方一致
+     elsif search == "backward_match"
+       @user = User.where("name LIKE?","%#{word}")#後方一致
+     elsif search == "partial_match"
+       @user = User.where("name LIKE?","%#{word}%")#部分一致
+     else
+       @user = User.all
+     end
+  end
+  #-------------------------------------------------------------------------
 end
